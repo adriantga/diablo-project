@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Combatant.h"
+#include "Room.h"
 
 struct Player
 {
@@ -12,6 +13,7 @@ struct Player
     int enemiesKilled = 0;
     
     Combatant combatant;
+    Room previousRoom;
 };
 
 struct Enemy

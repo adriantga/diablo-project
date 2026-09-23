@@ -1,7 +1,12 @@
 ﻿#pragma once
+#include <vector>
+
+#include "Door.h"
 
 class Room
 {
-public:
+    std::vector<Door> doors;
     
+public:
+    void OpenDoor(int doorIndex);
 };
