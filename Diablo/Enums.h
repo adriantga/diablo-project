@@ -1,4 +1,6 @@
-﻿enum class DoorDestination
+﻿#pragma once
+
+enum class DoorDestination
 {
     Return,
     Exit
