@@ -155,7 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Character.cpp" />
+    <ClCompile Include="Combatant.cpp" />
     <ClCompile Include="Diablo.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="Room.cpp" />
@@ -165,7 +165,7 @@
     <Content Include="References\Project Base.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Character.h" />
+    <ClInclude Include="Combatant.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Room.h" />
