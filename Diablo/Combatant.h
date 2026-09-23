@@ -17,8 +17,6 @@ class Combatant
     int myStrength = 1;
     bool myIsImmortal = false;
     
-    void AdjustAmount(int& aAmount) { aAmount = Min(aAmount, 1); }
-    
 public:
     int GetMaxHealth() const { return myPhysique * 4 + myStrength * 6 + mySkill * 3; }
     int GetDamage() const { return myStrength  * mySkill; }

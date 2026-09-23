@@ -1,8 +1,18 @@
 ﻿#include "Utilities.h"
 #include "Windows.h"
 #include <iostream>
+#include <random>
 
 constexpr int CASE_OFFSET = 32;
+
+std::random_device globalRnd;
+std::mt19937 globalGen(globalRnd());
+
+int GetRandomNumber(int aMin, int aMax)
+{
+    std::uniform_int_distribution<> distributor(aMin, aMax);
+    return distributor(globalGen);
+}
 
 void ClearInput()
 {
@@ -15,7 +25,6 @@ void ClearInput()
 
 const char* FromCharacterTypeToText(CharacterType aCharacterType)
 {
-        
     switch (aCharacterType)
     {
     case CharacterType::Enemy:
@@ -25,6 +34,16 @@ const char* FromCharacterTypeToText(CharacterType aCharacterType)
     }
         
     return "";
+}
+
+void AdjustAmount(int& aAmount)
+{
+    aAmount = Min(aAmount, true);    
+}
+
+void Increase(int& aSource, int aAmount)
+{
+    aSource += aAmount;
 }
 
 void DoCommand(const char* aCommand)

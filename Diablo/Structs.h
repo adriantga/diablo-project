@@ -23,6 +23,12 @@ struct Enemy
 
 struct GameData
 {
-    // We only need to do this for now.
+    int minEnemyCount = 0;
+    int maxEnemyCount = 1;
+};
+
+struct Diablo
+{
+    GameData gameData;
     Player player;
 };
