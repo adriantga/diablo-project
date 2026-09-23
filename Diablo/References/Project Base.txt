@@ -1,0 +1,26 @@
+﻿Diablo – Components:
+ - Doors
+ - Rooms
+ - Enemies
+ - Battles
+ - Chests
+ - Inventory
+
+Diablo – Baseline:
+ - Attack Damage = Strength * Skill
+ - Max Health = Physique * 4 + Strength * 6 + Skill * 3
+ - Carry Capacity = Strength + Skill / 3
+ - Defense = Physique + Skill
+
+Diablo – Structure:
+ - Write Code Structure!
+
+Diablo – Cheat Codes:
+ - "skill issue" = immortality
+ - "magic trick" = kill enemy instantly
+
+Diablo – Details:
+ - "->" to indicate currently selected index
+ - "[←/→]" to cycle horizontally
+ - "[↓/↑]" to cycle vertically
+ - "[ENTER]" to select option
