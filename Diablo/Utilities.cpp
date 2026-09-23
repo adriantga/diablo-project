@@ -13,6 +13,20 @@ void ClearInput()
     }
 }
 
+const char* FromCharacterTypeToText(CharacterType aCharacterType)
+{
+        
+    switch (aCharacterType)
+    {
+    case CharacterType::Enemy:
+        return "Enemy";
+    case CharacterType::Player:
+        return "Player";
+    }
+        
+    return "";
+}
+
 void DoCommand(const char* aCommand)
 {
     system(aCommand);
