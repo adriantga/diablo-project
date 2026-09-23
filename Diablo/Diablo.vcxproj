@@ -157,6 +157,8 @@
   <ItemGroup>
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Diablo.cpp" />
+    <ClCompile Include="Door.cpp" />
+    <ClCompile Include="Room.cpp" />
     <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -164,7 +166,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h" />
+    <ClInclude Include="Door.h" />
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="Room.h" />
+    <ClInclude Include="Structs.h" />
     <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
