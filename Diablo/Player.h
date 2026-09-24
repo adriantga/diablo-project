@@ -1,7 +1,10 @@
 ﻿#pragma once
+#include "Structs.h"
 
 class Player
 {
-public:
+    Character myCharacter;
     
+public:
+    Player();
 };
