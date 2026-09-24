@@ -1,10 +1,9 @@
-#include <iostream>
-
-#include "Utilities.h"
+#include "Windows.h"
+#include "Helpers.h"
 
 int main()
 {
-    std::cout << "Hello, World!" << '\n';
-    Pause();
+    InitializeRandom();
+    system("pause");
     return 0;
 }

@@ -1,34 +1,33 @@
 ﻿#pragma once
-#include "Combatant.h"
-#include "Room.h"
 
-struct Player
+enum class CharacterType;
+
+struct Character
 {
-    // This struct will take care of things like
-    // 1. Rooms traversed
-    // 2. Enemies killed(for scaling difficulty)
-    // More to come, possibly
-    // -----------------------------------------------
-    int roomsCleared = 0;
-    int enemiesKilled = 0;
+    int health = 1;
+    int damage = 1;
+    int physique = 1;
+    int strength = 1;
+    int skill = 1;
+    CharacterType characterType;
     
-    Combatant combatant;
-    Room previousRoom;
-};
-
-struct Enemy
-{
-    Combatant combatant;
-};
-
-struct GameData
-{
-    int minEnemyCount = 0;
-    int maxEnemyCount = 1;
-};
-
-struct Diablo
-{
-    GameData gameData;
-    Player player;
+    int GetCarryCapacity()
+    {
+        return strength + skill / 3;
+    }
+    
+    int GetAttackDamage()
+    {
+        return strength * skill;
+    }
+    
+    int GetDefense()
+    {
+        return physique + skill;
+    }
+    
+    int GetMaxHealth()
+    {
+        return physique * 4 + strength * 6 + skill * 3;
+    }
 };

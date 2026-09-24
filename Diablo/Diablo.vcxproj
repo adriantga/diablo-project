@@ -155,22 +155,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Combatant.cpp" />
     <ClCompile Include="Diablo.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="Room.cpp" />
-    <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="Helpers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="References\Project Base.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Combatant.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="Structs.h" />
-    <ClInclude Include="Utilities.h" />
+    <ClInclude Include="Helpers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
