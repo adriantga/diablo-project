@@ -1,9 +1,9 @@
-#include "Windows.h"
-#include "Helpers.h"
+#include <cstdlib>
+
 
 int main()
 {
-    InitializeRandom();
+    // I swear to god bro.
     system("pause");
     return 0;
 }
