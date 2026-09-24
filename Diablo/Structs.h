@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #include "Utilities.h"
 
 struct Character
@@ -16,12 +17,30 @@ struct Character
     int GetDefense() const { return physique + skill; }
     bool IsAlive() const { return GetHealth() > 0; }
     
+    void SetupAttributes()
+    {
+        physique = 1;
+        strength = 1;
+        skill = 1;
+    }
+    
     void TakeDamage(Character aCharacter)
     {
-        int damage = aCharacter.GetAttackValue() - GetDefense();
-        damage = Min(damage, 0);
+        int myDamage = aCharacter.GetAttackValue() - GetDefense();
         
-        health -= damage;
+        // Just for comparison
+        int opponentDamage = GetAttackValue() - GetDefense();
+        
+        if (myDamage == opponentDamage || (myDamage == 0 || opponentDamage == 0))
+        {
+            myDamage = 1;
+        }
+        else
+        {
+            myDamage = Min(myDamage, 0);
+        }
+        
+        health -= myDamage;
         health = Min(health, 0);
     }
 
