@@ -10,7 +10,7 @@ public:
 
     Character GetCharacter() const { return myCharacter; }
     
-    int GetHealth() const { return myCharacter.health; }
+    int GetHealth() const { return myCharacter.GetHealth(); }
     bool IsAlive() const { return GetHealth() > 0; }
     void TakeDamage(Character aCharacter) { myCharacter.TakeDamage(aCharacter); }
     void RestoreHealth() { myCharacter.RestoreHealth(); }

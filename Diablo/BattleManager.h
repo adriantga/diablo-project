@@ -4,6 +4,8 @@
 
 class BattleManager
 {
+    void ReceiveDamage(Player& aPlayer, Enemy& aEnemy, bool isPlayer = true);
+    
 public:
-    void EnterCombat(Player aPlayer, Enemy aEnemy);
+    void EnterCombat(Player& aPlayer, Enemy& aEnemy);
 };

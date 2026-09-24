@@ -3,25 +3,35 @@
 #include <cstdlib>
 #include <iostream>
 
-void BattleManager::EnterCombat(Player aPlayer, Enemy aEnemy)
+void BattleManager::EnterCombat(Player& aPlayer, Enemy& aEnemy)
 {
-    do
+    while (aEnemy.IsAlive())
     {
-        aEnemy.TakeDamage(aPlayer.GetCharacter());
-        aPlayer.TakeDamage(aEnemy.GetCharacter());
+        // Might have to use a pointer for this
+        ReceiveDamage(aPlayer, aEnemy);
+        ReceiveDamage(aPlayer, aEnemy, false);
         
         system("pause");
+        
         std::cout << "Enemy Health remaining: " << aEnemy.GetHealth() << '\n';
         std::cout << "Player Health remaining: " << aPlayer.GetHealth() << '\n';
+        
     }
-    while (aEnemy.IsAlive() && aPlayer.IsAlive());
-    
+
     if (aPlayer.IsAlive())
     {
-        std::cout << "Player made it out alive!" << '\n';
+        std::cout << "You won the battle! Yippee!" << '\n';
     }
-    else if (aEnemy.IsAlive())
+}
+
+void BattleManager::ReceiveDamage(Player& aPlayer, Enemy& aEnemy, bool isPlayer)
+{
+    if (aPlayer.IsAlive() && isPlayer)
     {
-        std::cout << "Enemy made it out alive..." << '\n';
+        aEnemy.TakeDamage(aPlayer.GetCharacter());
+    }
+    else if (aEnemy.IsAlive() && !isPlayer)
+    {
+        aPlayer.TakeDamage(aEnemy.GetCharacter());
     }
 }

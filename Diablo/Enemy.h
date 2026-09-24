@@ -7,10 +7,9 @@ class Enemy
     
 public:
     Enemy();
-    
     Character GetCharacter() const { return myCharacter; }
     int GetHealth() const { return myCharacter.health; }
-    bool IsAlive() const { return GetHealth() > 0; }
+    bool IsAlive() const { return myCharacter.IsAlive(); }
     void TakeDamage(Character aCharacter) { myCharacter.TakeDamage(aCharacter); }
     void RestoreHealth() { myCharacter.RestoreHealth(); }
     int GetDefense() const { return myCharacter.GetDefense(); }
