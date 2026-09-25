@@ -1,28 +1,17 @@
 ﻿#pragma once
 #include <vector>
 
-class Door;
-
 class Room
 {
-    std::vector<Door*> myDoors = {};
-    std::vector<const char*> myDirections = { "N", "E", "S", "W" };
-    
-    int myDoorCount = 0;
-    int myMinDoorCount = 2;
-    int myMaxDoorCount = 4;
-    int myCachedInput = -1;
-    int myPreviousInput = -1;
-    
-    bool myIsFirstRoom = false;
-    
-    void GenerateDoors(int aDoorCount);
-    const char* GetDirection(int aDoorIndex) const { return myDirections[aDoorIndex]; }
-    void OpenDoor(int aDoorIndex);
+    const char* myRoomName = nullptr;
+    std::vector<Room> myConnections = {};
     
 public:
-    Room(bool myIsFirstRoom = false);
-    Room(int aDoorCount, bool myIsFirstRoom = false);
-    int GetDoorCount() const { return myDoorCount; }
-    const char* myDirection = nullptr;
+    // ---- Constructors x Destructor
+    Room(const char* aRoomName);
+    Room(const char* aRoomName, std::vector<Room> aConnections);
+    
+    // ---- Methods
+    void AddConnection(Room aRoom);
+    const char* GetRoomName() const;
 };

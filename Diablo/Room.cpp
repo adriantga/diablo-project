@@ -2,55 +2,43 @@
 
 #include <iostream>
 
-#include "Door.h"
-#include "Utilities.h"
+// ------------------------------- ENTRANCE THINGS -------------------------------
+// Entrance leads to:
+// - Cathedral
+//
+// Cathedral leads to:
+// - Entrance
+// - Armory
+//
+// --------------------------------- OTHER ROOMS ---------------------------------
+// Armory lead to 
+// - Cathedral
+// - Kitchen
+//
+// Kitchen leads to
+// - Cells
+// - Armory
+//
+// Cells
+// - Kitchen
+// -------------------------------------------------------------------------------
 
-Room::Room(bool myIsFirstRoom) : Room(myDoorCount = GetRandomNumber(myMinDoorCount = 2, myMaxDoorCount = 4), myIsFirstRoom)
+Room::Room(const char* aRoomName) : Room(aRoomName, {})
 {
 }
 
-Room::Room(int aDoorCount, bool myIsFirstRoom)
+Room::Room(const char* aRoomName, std::vector<Room> aConnections)
 {
-    this->myIsFirstRoom = myIsFirstRoom;
-    this->myDoorCount = aDoorCount;
-    
-    if (myIsFirstRoom)
-    {
-        WriteLine("This is the first room");
-    }
-    
-    aDoorCount = Min(aDoorCount, myMinDoorCount);
-    for (int doorIndex = 0; doorIndex < aDoorCount; doorIndex++)
-    {
-        myDirection = GetDirection(doorIndex);
-        
-        if (!myIsFirstRoom && doorIndex == aDoorCount - 1)
-        {
-            myDirection = "Back";
-        }
-        
-        Door door = Door();
-        myDoors.push_back(&door);
-        
-        std::cout << "[" << (doorIndex + 1) << "] Go " << myDirection << '\n';
-    }
-    
-    int input;
-    ForceInput(input, 1, myDoorCount);
-    OpenDoor(input - 1);
+    this->myRoomName = aRoomName;
+    this->myConnections = aConnections;
 }
 
-void Room::OpenDoor(int aDoorIndex)
+void Room::AddConnection(Room aRoom)
 {
-    Door door = *myDoors[aDoorIndex];
-    
-    this->myCachedInput = aDoorIndex;
-    if (aDoorIndex == myDoorCount - 1 && !myIsFirstRoom && door.GetPreviousRoom() != nullptr)
-    {
-        int doorCount = myDoors[aDoorIndex]->GetPreviousRoom()->GetDoorCount();
-        std::cout << doorCount << '\n';
-        return;
-    }
-    
-    myDoors[aDoorIndex]->OpenDoor();
+    myConnections.push_back(aRoom);
+}
+
+const char* Room::GetRoomName() const
+{
+    return myRoomName;
 }
