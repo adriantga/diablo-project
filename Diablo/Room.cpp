@@ -31,7 +31,6 @@ Room::Room(int aDoorCount, bool myIsFirstRoom)
         
         Door door = Door();
         myDoors.push_back(&door);
-        if (door.GetPreviousRoom() == nullptr) door.SetPreviousRoom(this);
         
         std::cout << "[" << (doorIndex + 1) << "] Go " << myDirection << '\n';
     }
@@ -41,18 +40,17 @@ Room::Room(int aDoorCount, bool myIsFirstRoom)
     OpenDoor(input - 1);
 }
 
-
 void Room::OpenDoor(int aDoorIndex)
 {
-    std::cout << aDoorIndex << '\n';
+    Door door = *myDoors[aDoorIndex];
     
-    if (aDoorIndex == myDoorCount - 1 && !myIsFirstRoom)
+    this->myCachedInput = aDoorIndex;
+    if (aDoorIndex == myDoorCount - 1 && !myIsFirstRoom && door.GetPreviousRoom() != nullptr)
     {
-        WriteLine("Went back!");
-        Room(myDoors[aDoorIndex]->GetPreviousRoom()->GetDoorCount());
+        int doorCount = myDoors[aDoorIndex]->GetPreviousRoom()->GetDoorCount();
+        std::cout << doorCount << '\n';
         return;
     }
     
-    this->myCachedInput = aDoorIndex;
     myDoors[aDoorIndex]->OpenDoor();
 }
