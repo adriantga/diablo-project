@@ -158,6 +158,7 @@
     <ClCompile Include="Diablo.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="Room.cpp" />
+    <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="References\Project Base.txt" />
@@ -165,6 +166,7 @@
   <ItemGroup>
     <ClInclude Include="Door.h" />
     <ClInclude Include="Room.h" />
+    <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
