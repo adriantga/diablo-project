@@ -24,41 +24,35 @@ Room::Room(int aDoorCount, bool myIsFirstRoom)
     {
         myDirection = GetDirection(doorIndex);
         
-        bool hasOpposite = !myIsFirstRoom && myPreviousInput != -1;
+        if (!myIsFirstRoom && doorIndex == aDoorCount - 1)
+        {
+            myDirection = "Back";
+        }
         
         Door door = Door();
         myDoors.push_back(&door);
-        door.SetPreviousRoom(this);
+        if (door.GetPreviousRoom() == nullptr) door.SetPreviousRoom(this);
         
-        std::cout << "[" << (doorIndex + 1) << "] Go " << myDirection << (hasOpposite ? "(go back)" : "") << '\n';
+        std::cout << "[" << (doorIndex + 1) << "] Go " << myDirection << '\n';
     }
+    
+    int input;
+    ForceInput(input, 1, myDoorCount);
+    OpenDoor(input - 1);
 }
 
-bool Room::IsOppositeDirection(int i) const
-{
-    int result = 0;
-    
-    switch (i)
-    {
-    case 0: // N
-        result = 2;
-        break;
-    case 1: // E
-        result = 3;
-        break;
-    case 2: // S
-        result = 0;
-        break;
-    case 3: // W
-        result = 1;
-        break;
-    }
-    
-    return result;
-}
 
 void Room::OpenDoor(int aDoorIndex)
 {
+    std::cout << aDoorIndex << '\n';
+    
+    if (aDoorIndex == myDoorCount - 1 && !myIsFirstRoom)
+    {
+        WriteLine("Went back!");
+        Room(myDoors[aDoorIndex]->GetPreviousRoom()->GetDoorCount());
+        return;
+    }
+    
     this->myCachedInput = aDoorIndex;
     myDoors[aDoorIndex]->OpenDoor();
 }

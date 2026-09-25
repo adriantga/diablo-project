@@ -19,12 +19,10 @@ class Room
     void GenerateDoors(int aDoorCount);
     const char* GetDirection(int aDoorIndex) const { return myDirections[aDoorIndex]; }
     void OpenDoor(int aDoorIndex);
-    void BroadcastDoors();
     
 public:
     Room(bool myIsFirstRoom = false);
     Room(int aDoorCount, bool myIsFirstRoom = false);
+    int GetDoorCount() const { return myDoorCount; }
     const char* myDirection = nullptr;
-    
-    bool IsOppositeDirection(int i) const;
 };

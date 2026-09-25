@@ -8,4 +8,5 @@ class Door
 public:
     void SetPreviousRoom(Room* aRoom);
     void OpenDoor();
+    Room* GetPreviousRoom() const { return myPreviousRoom; }
 };

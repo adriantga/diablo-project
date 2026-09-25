@@ -37,8 +37,6 @@ void ForceInput(int& aInput)
         ClearInput();
         std::cin >> aInput;
     }
-    
-    ClearInput();
 }
 
 void ForceInput(int& aInput, int aMin, int aMax)
@@ -60,8 +58,6 @@ void ForceInput(int& aInput, int aMin, int aMax)
 
     bool isInRange = aInput >= aMin && aInput <= aMax;
     
-    ClearInput();
-    
     while (!isInRange)
     {
         while (std::cin.fail())
@@ -74,7 +70,6 @@ void ForceInput(int& aInput, int aMin, int aMax)
         std::cin >> aInput;
         isInRange = aInput >= aMin && aInput <= aMax;
     }
-    
 }
 
 int GetRandomNumber(int aMin, int aMax)
