@@ -1,7 +1,11 @@
 ﻿#pragma once
+#include "Room.h"
 
 class Door
 {
-public:
+    Room *myPreviousRoom = nullptr;
     
+public:
+    void SetPreviousRoom(Room* aRoom);
+    void OpenDoor();
 };
