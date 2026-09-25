@@ -43,6 +43,8 @@ void ForceInput(int& aInput, int aMin, int aMax)
 {
     bool hasLimits = aMin != -1 && aMax != -1;
     
+    std::cout << "Min: " << aMin << ", Max: " << aMax << '\n';
+    
     if (aMin > aMax)
     {
         int temporary = aMax;
