@@ -3,14 +3,14 @@
 #include <iostream>
 #include <vector>
 
-Door::Door(std::vector<Room> aConnections)
+Door::Door(std::vector<Room*> aConnections)
 {
     myConnections = aConnections;
 }
 
 void Door::AddConnection(Room aRoom)
 {
-    myConnections.push_back(aRoom);
+    myConnections.push_back(&aRoom);
 }
 
 void Door::OpenDoor()
@@ -25,7 +25,7 @@ void Door::ClearConnections()
 
 void Door::EnterRoom(int aIndex)
 {
-    Room room = GetConnection(aIndex);
+    Room room = *GetConnection(aIndex);
     room.EnterRoom();
 }
 
@@ -33,6 +33,6 @@ void Door::ShowConnections()
 {
     for (int i = 0; i < myConnections.size(); i++)
     {
-        std::cout << "[" << (i + 1) << "] Enter " << myConnections[i].GetRoomName() << '\n';
+        std::cout << "[" << (i + 1) << "] Enter " << myConnections[i]->GetRoomName() << '\n';
     }
 }

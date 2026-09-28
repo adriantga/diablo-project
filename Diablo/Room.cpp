@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Utilities.h"
+#include "Door.h"
 
 // ------------------------------- ENTRANCE THINGS -------------------------------
 // Entrance leads to:
@@ -36,6 +36,13 @@
 Room::Room(const char* aRoomName)
 {
     this->myRoomName = aRoomName;
+    this->myDoor = Door();
+}
+
+
+void Room::SetDoor(Door& aDoor)
+{
+    myDoor = aDoor;
 }
 
 void Room::EnterRoom()

@@ -2,6 +2,9 @@
 #include "Room.h"
 #include "Utilities.h"
 
+class Room;
+class Door;
+
 int main()
 {
     Room entrance = "Entrance";
@@ -33,6 +36,12 @@ int main()
     
     std::vector<Door> doors = {outside, entranceDoor, cathedralDoor, armoryDoor, kitchenDoor, cellsDoor };
     
+    entrance.SetDoor(&entranceDoor);
+    cathedal.SetDoor(&cathedralDoor);
+    armory.SetDoor(&armoryDoor);
+    kitchen.SetDoor(&kitchenDoor);
+    cells.SetDoor(&cellsDoor);
+    
     Door& currentDoor = outside;
     currentDoor.OpenDoor();
     
@@ -43,7 +52,7 @@ int main()
         ForceInput(input, 1, currentDoor.GetConnectionCount());
         
         // Enter the connection
-        currentDoor = doors[input - 1];
+        currentDoor = *currentDoor.GetConnection(input - 1)->GetDoor();
         currentDoor.OpenDoor();
     }
     
