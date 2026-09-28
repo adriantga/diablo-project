@@ -36,11 +36,11 @@ int main()
     
     std::vector<Door> doors = {outside, entranceDoor, cathedralDoor, armoryDoor, kitchenDoor, cellsDoor };
     
-    entrance.SetDoor(&entranceDoor);
-    cathedal.SetDoor(&cathedralDoor);
-    armory.SetDoor(&armoryDoor);
-    kitchen.SetDoor(&kitchenDoor);
-    cells.SetDoor(&cellsDoor);
+    entrance.SetDoor(entranceDoor);
+    cathedal.SetDoor(cathedralDoor);
+    armory.SetDoor(armoryDoor);
+    kitchen.SetDoor(kitchenDoor);
+    cells.SetDoor(cellsDoor);
     
     Door& currentDoor = outside;
     currentDoor.OpenDoor();
@@ -52,7 +52,7 @@ int main()
         ForceInput(input, 1, currentDoor.GetConnectionCount());
         
         // Enter the connection
-        currentDoor = *currentDoor.GetConnection(input - 1)->GetDoor();
+        currentDoor = currentDoor.GetConnection(input - 1)->GetDoor();
         currentDoor.OpenDoor();
     }
     
