@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Utilities.h"
+
 // ------------------------------- ENTRANCE THINGS -------------------------------
 // Entrance leads to:
 // - Cathedral
@@ -23,38 +25,22 @@
 // - Kitchen
 // -------------------------------------------------------------------------------
 
-Room::Room(const char* aRoomName) : Room(aRoomName, {})
-{
-}
+// This destructor bullshit is pissing me off.
+// You can shove that error prompt up your ass.
+//Room::~Room()
+//{
+//    delete myRoomName;
+//    WriteLine("Cleaned up Room!");
+//}
 
-Room::Room(const char* aRoomName, std::vector<Room> aConnections)
+Room::Room(const char* aRoomName)
 {
     this->myRoomName = aRoomName;
-    this->myConnections = aConnections;
 }
 
-void Room::AddConnection(Room aRoom)
+void Room::EnterRoom()
 {
-    myConnections.push_back(aRoom);
-}
-
-void Room::ShowConnections()
-{
-    for (int connection = 0; connection < myConnections.size(); connection++)
-    {
-        int displayedIndex = connection + 1;
-        std::cout << "[" << displayedIndex << "] Enter " << myConnections[connection].GetRoomName() << '\n';
-    }
-}
-
-void Room::SetConnections(std::vector<Room> aConnections)
-{
-    myConnections = aConnections;
-}
-
-void Room::AddConnections(std::vector<Room> aConnections)
-{
-    myConnections.insert(myConnections.end(), aConnections.begin(), aConnections.end());
+    std::cout << "Entered room: " << myRoomName << '\n';
 }
 
 const char* Room::GetRoomName() const

@@ -1,24 +1,23 @@
 ﻿#include "Utilities.h"
 
 #include <iostream>
-#include <random>
 
-static std::random_device globalRnd;
-static std::mt19937 globalGen(globalRnd());
+// ----------------------------------
+// WRAPPERS
+// ----------------------------------
+void WriteLine(const char* aText, bool aNewLine)
+{
+    std::cout << aText << (aNewLine ? '\n' : '\0');
+}
 
 void DoCommand(const char* aCommand)
 {
     system(aCommand);
 }
 
-void PauseConsole()
+void Pause()
 {
     DoCommand("pause");
-}
-
-void ClearConsole()
-{
-    DoCommand("cls");
 }
 
 void ClearInput()
@@ -33,60 +32,56 @@ void ForceInput(int& aInput)
     
     while (std::cin.fail())
     {
-        WriteLine("Please enter a valid integer!");
+        WriteLine("Please only enter numbers!");
         ClearInput();
         std::cin >> aInput;
     }
 }
 
+bool HasSubceeded(int aSource, int aTarget)
+{
+    return aSource < aTarget;
+}
+
+bool HasExceeded(int aSource, int aTarget)
+{
+    return aSource > aTarget;
+}
+
 void ForceInput(int& aInput, int aMin, int aMax)
 {
-    bool hasLimits = aMin != -1 && aMax != -1;
-    
-    std::cout << "Min: " << aMin << ", Max: " << aMax << '\n';
-    
-    if (aMin > aMax)
+    if (aMin == aMax)
     {
-        int temporary = aMax;
-        aMax = aMin;
-        aMin = temporary;
+        std::cout << "Enter a number (" << aMin << "):" << '\n';
     }
+    else
+    {
+        std::cout << "Enter a number (" << aMin << " - " << aMax << "):" << '\n';
+    }
+
+    
+    std::cin >> aInput;
+    bool hasLimits = aMin != -1 && aMax != -1;
+    bool isInRange = !HasSubceeded(aInput, aMin) && !HasExceeded(aInput, aMax);
     
     if (!hasLimits)
     {
-        WriteLine("Please enter a valid range!");
+        WriteLine("The range you entered is invalid!");
         return;
     }
 
-    bool isInRange = aInput >= aMin && aInput <= aMax;
-    
     while (!isInRange)
     {
         while (std::cin.fail())
         {
-            WriteLine("Please enter a valid integer!");
+            WriteLine("Please only enter numbers!");
             ClearInput();
             std::cin >> aInput;
         }
-
+        
         std::cin >> aInput;
-        isInRange = aInput >= aMin && aInput <= aMax;
+        isInRange = !HasSubceeded(aInput, aMin) && !HasExceeded(aInput, aMax);
     }
-}
-
-int GetRandomNumber(int aMin, int aMax)
-{
-    std::uniform_int_distribution<> distributor(aMin, aMax);
-    return distributor(globalGen);
-}
-
-void WriteLine(const char* aText, bool aNewLine)
-{
-    std::cout << aText << (aNewLine ? '\n' : '\0');
-}
-
-int Min(int aValue, int aMin)
-{
-    if (aValue < aMin) return aMin;
-    return aValue;
+    
+    ClearInput();
 }

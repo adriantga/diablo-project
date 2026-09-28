@@ -1,53 +1,52 @@
-#include <cstdlib>
-#include <iostream>
-
+#include "Door.h"
 #include "Room.h"
 #include "Utilities.h"
 
-
 int main()
 {
-    // [ENTER] Attack
-    // [1/2/3] Enter Room
+    Room entrance = "Entrance";
+    Room cathedal = "Cathedral";
+    Room armory = "Armory";
+    Room cells = "Cells";
+    Room kitchen = "Kitchen";
     
-    Room entranceRoom = "Entrance";
-    Room cathedralRoom = "Cathedral";
-    Room cellsRoom = "Cells";
-    Room armoryRoom = "Armory";
-    Room kitchenRoom = "Kitchen";
+    Door outside = Door();
+    outside.AddConnection(entrance);
     
-    entranceRoom.AddConnection(cathedralRoom);
-    cathedralRoom.AddConnections({entranceRoom, armoryRoom});
-    armoryRoom.AddConnections({cathedralRoom, kitchenRoom});
-    kitchenRoom.AddConnections({cellsRoom, armoryRoom});
-    cellsRoom.AddConnection(kitchenRoom);
-    
-    std::vector<Room> rooms = {entranceRoom, cathedralRoom, armoryRoom, kitchenRoom, cellsRoom};
-    
-    // Use a pointer here instead later
-    Room currentRoom = entranceRoom;
-    
-    currentRoom.ShowConnections();
-    
-    int input;
+    Door entranceDoor = Door();
+    entranceDoor.AddConnection(cathedal);
 
-    while (true)
+    Door cathedralDoor = Door();
+    cathedralDoor.AddConnection(entrance);
+    cathedralDoor.AddConnection(armory);
+    
+    Door armoryDoor = Door();
+    armoryDoor.AddConnection(cathedal);
+    armoryDoor.AddConnection(kitchen);
+    
+    Door kitchenDoor = Door();
+    kitchenDoor.AddConnection(cells);
+    kitchenDoor.AddConnection(armory);
+    
+    Door cellsDoor = Door();
+    cellsDoor.AddConnection(kitchen);
+    
+    std::vector<Door> doors = {outside, entranceDoor, cathedralDoor, armoryDoor, kitchenDoor, cellsDoor };
+    
+    Door& currentDoor = outside;
+    currentDoor.OpenDoor();
+    
+    int input = -1;
+    bool run = true;
+    while (run)
     {
-        ForceInput(input, 0, currentRoom.GetConnectionCount());
+        ForceInput(input, 1, currentDoor.GetConnectionCount());
         
-        if (input > 0 && input <= currentRoom.GetConnectionCount())
-        {
-            
-            
-            Room nextRoom = currentRoom.GetConnection(input - 1);
-            
-            // This should have the connections already but it doesn't...
-            
-            currentRoom.SetConnections(nextRoom.GetConnections());
-            currentRoom = nextRoom;
-            
-            currentRoom.ShowConnections();
-        }
+        // Enter the connection
+        currentDoor = doors[input - 1];
+        currentDoor.OpenDoor();
     }
     
+    Pause();
+    return 0;
 }
