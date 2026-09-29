@@ -2,55 +2,29 @@
 
 #include <iostream>
 
-#include "Door.h"
-
-// ------------------------------- ENTRANCE THINGS -------------------------------
-// Entrance leads to:
-// - Cathedral
-//
-// Cathedral leads to:
-// - Entrance
-// - Armory
-//
-// --------------------------------- OTHER ROOMS ---------------------------------
-// Armory lead to 
-// - Cathedral
-// - Kitchen
-//
-// Kitchen leads to
-// - Cells
-// - Armory
-//
-// Cells
-// - Kitchen
-// -------------------------------------------------------------------------------
-
-// This destructor bullshit is pissing me off.
-// You can shove that error prompt up your ass.
-//Room::~Room()
-//{
-//    delete myRoomName;
-//    WriteLine("Cleaned up Room!");
-//}
-
 Room::Room(const char* aRoomName)
 {
-    this->myRoomName = aRoomName;
-    this->myDoor = Door();
+    myName = aRoomName;
 }
 
-
-void Room::SetDoor(Door& aDoor)
+void Room::AddConnection(const Room& aRoom)
 {
-    myDoor = aDoor;
+    myConnections.push_back(aRoom);
+    if (debug)
+    {
+        std::cout << "[" << GetName() << "] Added " << aRoom.GetName() << " to the list of connections!" << '\n';
+    }
 }
 
-void Room::EnterRoom()
+void Room::EnterCombat(const Diablo& aDiablo)
 {
-    std::cout << "Entered room: " << myRoomName << '\n';
-}
-
-const char* Room::GetRoomName() const
-{
-    return myRoomName;
+    std::cout << "Health -> " << aDiablo.player.GetHealth() << '\n';
+    
+    for (int i = 0; i < GetEnemyCount(); i++)
+    {
+        int enemyIndex = i + 1;
+        Enemy enemy = myEnemies[i];
+        
+        std::cout << "[" << enemyIndex << "] Attack " << enemy.GetName() << "(" << enemy.GetHealth() << "/" << enemy.GetMaxHealth() << ")" << '\n';
+    }
 }

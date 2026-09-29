@@ -7,10 +7,10 @@
  - Inventory
 
 Diablo – Baseline:
- - Attack Damage = Strength * Skill
- - Max Health = Physique * 4 + Strength * 6 + Skill * 3
- - Carry Capacity = Strength + Skill / 3
- - Defense = Physique + Skill
+ - Attack Damage = Strength * Agility
+ - Max Health = Vitality * 4 + Strength * 6 + Agility * 3
+ - Carry Capacity = Strength + Agility / 3
+ - Defense = Vitality + Agility
 
 Diablo – Structure:
  - Write Code Structure!

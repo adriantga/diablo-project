@@ -1,9 +1,19 @@
 ﻿#pragma once
+#include "Enemy.h"
+#include "Helpers.h"
+#include "Player.h"
+#include "Room.h"
 
-void WriteLine(const char* aText, bool aNewLine = true);
+int Min(int aValue, int aMin);
 void Pause();
 void ClearInput();
-void ForceInput(int& aInput);
-void ForceInput(int& aInput, int aMin, int aMax);
-bool HasSubceeded(int aSource, int aTarget);
-bool HasExceeded(int aSource, int aTarget);
+void ShowStats(const Character& character, const Player& player);
+void ShowStats(const Character& character);
+void ForceInput(int& aInput, int aMin = -1, int aMax = -1);
+int CalculateDamageTaken(Character aSelf, Character aOpponent);
+
+namespace CharacterFactory
+{
+    Enemy CreateEnemy(const char* aEnemyName, int aStrength, int aAgility, int aVitality, Room& room);
+    Player CreatePlayer(int aStrength, int aAgility, int aVitality);
+}

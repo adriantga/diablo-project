@@ -1,38 +1,38 @@
 ﻿#include "Door.h"
 
 #include <iostream>
-#include <vector>
 
-Door::Door(std::vector<Room*> aConnections)
+Door::Door(const Room& aRoom) : Door(aRoom, false, 0, 0)
 {
-    myConnections = aConnections;
+    
 }
 
-void Door::AddConnection(Room aRoom)
+Door::Door(const Room& aRoom, bool aIsLocked, int aStrength, int aAgility) : myRoom(aRoom.GetName())
 {
-    myConnections.push_back(&aRoom);
+    myRoom = aRoom;
+    isLocked = aIsLocked;
+    myRequiredStrength = aStrength;
+    myRequiredAgility = aAgility;
 }
 
-void Door::OpenDoor()
+void Door::OpenDoor(Diablo& aDiablo)
 {
-    ShowConnections();
-}
-
-void Door::ClearConnections()
-{
-    myConnections.clear();
-}
-
-void Door::EnterRoom(int aIndex)
-{
-    Room room = *GetConnection(aIndex);
-    room.EnterRoom();
-}
-
-void Door::ShowConnections()
-{
-    for (int i = 0; i < myConnections.size(); i++)
+    if (isLocked)
     {
-        std::cout << "[" << (i + 1) << "] Enter " << myConnections[i]->GetRoomName() << '\n';
+        std::cout << "The door is locked." << '\n';
+        return;
+    }
+    
+    std::cout << "------------------------------------ " << myRoom.GetName() << " ------------------------------------" << '\n';
+    
+    if (!myRoom.IsRoomCleared())
+    {
+        myRoom.EnterCombat(aDiablo);
+        return;
+    }
+    
+    for (int connection = 0; connection < myRoom.GetConnectionsCount(); connection++)
+    {
+        std::cout << "[" << connection + 1 << "] Enter " << myRoom.GetConnection(connection).GetName() << '\n';
     }
 }

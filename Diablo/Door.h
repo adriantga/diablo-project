@@ -1,30 +1,23 @@
 ﻿#pragma once
-#include <vector>
 #include "Room.h"
-
-class Room;
 
 class Door
 {
-    std::vector<Room*> myConnections = {};
-    void ShowConnections();
+    Room myRoom;
+    bool isLocked = false;
+    
+    // Implement this 
+    int myRequiredStrength = 0;
+    int myRequiredAgility = 0;
     
 public:
-    Door() = default;
-    Door(std::vector<Room*> aConnections);
-    void AddConnection(Room aRoom);
-    void OpenDoor();
-    void ClearConnections();
+    Door(const Room& aRoom);
+    Door(const Room& aRoom, bool aIsLocked, int aStrength, int aAgility);
     
-    void EnterRoom(int aIndex);
+    void OpenDoor(Diablo& aDiablo);
     
-    int GetConnectionCount() const
+    const char* GetRoomName() const
     {
-        return int(myConnections.size());
-    }
-    
-    Room* GetConnection(int aIndex)
-    {
-        return myConnections.at(aIndex);
+        return myRoom.GetName();
     }
 };

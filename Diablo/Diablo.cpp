@@ -1,61 +1,79 @@
+#include <cstdlib>
+
+#include "BattleController.h"
 #include "Door.h"
 #include "Room.h"
 #include "Utilities.h"
 
-class Room;
-class Door;
-
 int main()
 {
+    Diablo diablo = {};
+    
     Room entrance = "Entrance";
-    Room cathedal = "Cathedral";
+    entrance.SetId(0);
+    
+    Room cathedral = "Cathedral";
+    cathedral.SetId(1);
+    
     Room armory = "Armory";
-    Room cells = "Cells";
+    armory.SetId(2);
+    
     Room kitchen = "Kitchen";
+    kitchen.SetId(3);
     
-    Door outside = Door();
-    outside.AddConnection(entrance);
+    Room cells = "Cells";
+    cells.SetId(4);
     
-    Door entranceDoor = Door();
-    entranceDoor.AddConnection(cathedal);
-
-    Door cathedralDoor = Door();
-    cathedralDoor.AddConnection(entrance);
-    cathedralDoor.AddConnection(armory);
+    entrance.AddConnection(cathedral);
     
-    Door armoryDoor = Door();
-    armoryDoor.AddConnection(cathedal);
-    armoryDoor.AddConnection(kitchen);
+    cathedral.AddConnection(entrance);
+    cathedral.AddConnection(armory);
     
-    Door kitchenDoor = Door();
-    kitchenDoor.AddConnection(cells);
-    kitchenDoor.AddConnection(armory);
+    CharacterFactory::CreateEnemy("Test", 1, 1, 1, cathedral);
     
-    Door cellsDoor = Door();
-    cellsDoor.AddConnection(kitchen);
+    armory.AddConnection(cathedral);
+    armory.AddConnection(kitchen);
     
-    std::vector<Door> doors = {outside, entranceDoor, cathedralDoor, armoryDoor, kitchenDoor, cellsDoor };
+    kitchen.AddConnection(armory);
+    kitchen.AddConnection(cells);
     
-    entrance.SetDoor(entranceDoor);
-    cathedal.SetDoor(cathedralDoor);
-    armory.SetDoor(armoryDoor);
-    kitchen.SetDoor(kitchenDoor);
-    cells.SetDoor(cellsDoor);
+    cells.AddConnection(kitchen);
     
-    Door& currentDoor = outside;
-    currentDoor.OpenDoor();
+    Door entranceDoor = entrance;
+    Door cathedralDoor = cathedral;
+    Door armoryDoor = armory;
+    Door kitchenDoor = kitchen;
+    Door cellsDoor = cells;
     
-    int input = -1;
-    bool run = true;
-    while (run)
-    {
-        ForceInput(input, 1, currentDoor.GetConnectionCount());
-        
-        // Enter the connection
-        currentDoor = currentDoor.GetConnection(input - 1)->GetDoor();
-        currentDoor.OpenDoor();
-    }
+    std::vector<Room> rooms = {entrance, cathedral, armory, kitchen, cells};
+    std::vector<Door> doors = {entranceDoor, cathedralDoor, armoryDoor, kitchenDoor, cellsDoor};
+    
+    Room currentRoom = entrance;
+    
+    Player player = CharacterFactory::CreatePlayer(5, 4, 6);
+    diablo.player = player;
+    
     
     Pause();
+    
+    Door currentDoor = doors[currentRoom.GetId()];
+    currentDoor.OpenDoor(diablo);
+    
+    bool shouldRun = true;
+    int input;
+    
+    while (shouldRun)
+    {
+        ForceInput(input, 1, currentRoom.GetConnectionsCount());
+        int finalInput = input - 1;
+        if (currentRoom.IsRoomCleared())
+        {
+            currentRoom = rooms[currentRoom.GetConnection(finalInput).GetId()];
+            currentDoor = doors[currentRoom.GetId()];
+            currentDoor.OpenDoor(diablo);
+        }
+    }
+    
+    system("pause");
     return 0;
 }

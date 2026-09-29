@@ -1,28 +1,77 @@
 ﻿#pragma once
+#include <iostream>
+#include <vector>
 
-#include "Door.h"
-
-class Door;
+#include "Enemy.h"
 
 class Room
 {
-    const char* myRoomName = nullptr;
+    std::vector<Room> myConnections = {};
+    const char* myName = nullptr;
     
-    // Stop acting fucking stupid
-    Door myDoor;
+    // I think this could be a better way to handle rooms.
+    int myId = -1;
+    
+    std::vector<Enemy> myEnemies = {};
     
 public:
-    // ---- Constructor x Destructor
-    //~Room();
+    // For logging!
+    bool debug = false;
+    
     Room(const char* aRoomName);
-    void EnterRoom();
-    void SetDoor(Door& aDoor);
+    void AddConnection(const Room& aRoom);
+    void EnterCombat(const Diablo& aDiablo);
     
-    const char* GetRoomName() const;
-    
-    // Genuine fucking buffoon
-    Door GetDoor() const
+    void SetId(const int aId)
     {
-        return myDoor;
+        myId = aId;
     }
+    
+    int GetId() const
+    {
+        return myId;
+    }
+    
+    const char* GetName() const
+    {
+        return myName;
+    }
+    
+    int GetConnectionsCount() const
+    {
+        return static_cast<int>(myConnections.size());
+    }
+    
+    Room GetConnection(int aIndex) const
+    {
+        return myConnections[aIndex];
+    }
+    
+    void ClearConnections()
+    {
+        myConnections.clear();
+    }
+    
+    void SetConnections(const std::vector<Room>& aConnections)
+    {
+        myConnections = aConnections;
+    }
+    
+    std::vector<Room> GetConnections()
+    {
+        return myConnections;
+    }
+    
+    void AddEnemy(const Enemy& enemy)
+    {
+        myEnemies.push_back(enemy);
+        std::cout << "[" << GetName() << "] Added enemy '" << enemy.GetName() << "' to the room!" << '\n';
+    }
+    
+    bool IsRoomCleared() const
+    {
+        return myEnemies.empty();
+    }
+    
+    int GetEnemyCount() const { return static_cast<int>(myEnemies.size()); }
 };
