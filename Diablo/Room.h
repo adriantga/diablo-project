@@ -62,15 +62,28 @@ public:
         return myConnections;
     }
     
-    void AddEnemy(const Enemy& enemy)
+    void AddEnemy(const Enemy& aEnemy)
     {
-        myEnemies.push_back(enemy);
-        std::cout << "[" << GetName() << "] Added enemy '" << enemy.GetName() << "' to the room!" << '\n';
+        myEnemies.push_back(aEnemy);
+        if (debug)
+        {
+            std::cout << "[" << GetName() << "] Added enemy '" << aEnemy.GetName() << "' to the room!" << '\n';
+        }
+    }
+    
+    void RemoveEnemy(int aIndex)
+    {
+        // Implement this.
     }
     
     bool IsRoomCleared() const
     {
         return myEnemies.empty();
+    }
+    
+    Enemy GetEnemy(int aIndex) const
+    {
+        return myEnemies.at(aIndex);
     }
     
     int GetEnemyCount() const { return static_cast<int>(myEnemies.size()); }

@@ -29,7 +29,8 @@ int main()
     cathedral.AddConnection(entrance);
     cathedral.AddConnection(armory);
     
-    CharacterFactory::CreateEnemy("Test", 1, 1, 1, cathedral);
+    CharacterFactory::CreateEnemy("Skeleton", 1, 1, 1, cathedral);
+    CharacterFactory::CreateEnemy("Undead Warrior", 1, 1, 2, cathedral);
     
     armory.AddConnection(cathedral);
     armory.AddConnection(kitchen);
@@ -64,13 +65,43 @@ int main()
     
     while (shouldRun)
     {
-        ForceInput(input, 1, currentRoom.GetConnectionsCount());
-        int finalInput = input - 1;
         if (currentRoom.IsRoomCleared())
         {
+            ForceInput(input, 1, currentRoom.GetConnectionsCount());
+            int finalInput = input - 1;
+            
             currentRoom = rooms[currentRoom.GetConnection(finalInput).GetId()];
             currentDoor = doors[currentRoom.GetId()];
             currentDoor.OpenDoor(diablo);
+        }
+        
+        // I need to make the code look cleaner later!
+        else
+        {
+            do
+            {
+                // This code doesn't really work properly. I will need to work on it!
+                int enemyCount = currentRoom.GetEnemyCount();
+            
+                ForceInput(input, 1, enemyCount);
+                int finalInput = input - 1;
+            
+                Enemy chosenEnemy = currentRoom.GetEnemy(finalInput);
+                BattleController::Battle(diablo.player, chosenEnemy);
+                
+                if (!chosenEnemy.IsAlive()) 
+                {
+                    currentRoom.RemoveEnemy(finalInput);
+                }
+            
+                for (int i = 0; i < enemyCount; i++)
+                {
+                    Enemy enemy = currentRoom.GetEnemy(i);
+                    if (enemy.IsAlive()) diablo.player.TakeDamage(CalculateDamageTaken(player.GetCharacter(), enemy.GetCharacter()));
+                }
+                
+                currentRoom.EnterCombat(diablo);
+            } while (!currentRoom.IsRoomCleared());
         }
     }
     
