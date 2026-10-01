@@ -5,23 +5,65 @@
 #include "Room.h"
 #include "Utilities.h"
 
-int main()
+void ShowMainMenu()
 {
-    Diablo diablo = {};
-    
-    Room entrance = "Entrance";
+    ClearScreen();
+    std::cout << "==================================================" << '\n';
+    std::cout << "                      DIABLO                      " << '\n';
+    std::cout << "==================================================" << '\n';
+    std::cout << "[1] Play" << '\n';
+    std::cout << "[2] Cheats" << '\n';
+    std::cout << "[3] Quit" << '\n';
+    std::cout << "==================================================" << '\n';
+}
+
+void ShowCheatsMenu(Diablo& aDiablo)
+{
+    bool inCheatsMenu = true;
+    while (inCheatsMenu)
+    {
+        ClearScreen();
+        std::cout << "==================================================" << '\n';
+        std::cout << "                   CHEATS MENU                    " << '\n';
+        std::cout << "==================================================" << '\n';
+        std::cout << "[1] Immortality (skill issue): " << aDiablo.cheats.GetState(aDiablo.cheats.isImmortal) << '\n';
+        std::cout << "[2] One-Hit Kill (magic trick): " << aDiablo.cheats.GetState(aDiablo.cheats.isOneHit) << '\n';
+        std::cout << "[3] Back to Main Menu" << '\n';
+        std::cout << "==================================================" << '\n';
+
+        int cheatChoice;
+        ForceInput(cheatChoice, aDiablo, 1, 3);
+
+        switch (cheatChoice)
+        {
+        case 1:
+            aDiablo.cheats.isImmortal = !aDiablo.cheats.isImmortal;
+            break;
+        case 2:
+            aDiablo.cheats.isOneHit = !aDiablo.cheats.isOneHit;
+            break;
+        case 3:
+            inCheatsMenu = false;
+            break;
+        }
+    }
+}
+
+void PlayGame(Diablo& diablo)
+{
+    Room entrance = Room("Entrance", diablo);
     entrance.SetId(0);
     
-    Room cathedral = "Cathedral";
+    Room cathedral = Room("Cathedral", diablo);
     cathedral.SetId(1);
     
-    Room armory = "Armory";
+    Room armory = Room("Armory", diablo);
     armory.SetId(2);
     
-    Room kitchen = "Kitchen";
+    Room kitchen = Room("Kitchen", diablo);
     kitchen.SetId(3);
     
-    Room cells = "Cells";
+    Room cells = Room("Cells", diablo);
     cells.SetId(4);
     
     entrance.AddConnection(cathedral);
@@ -29,8 +71,8 @@ int main()
     cathedral.AddConnection(entrance);
     cathedral.AddConnection(armory);
     
-    CharacterFactory::CreateEnemy("Skeleton", 1, 1, 1, cathedral);
-    CharacterFactory::CreateEnemy("Undead Warrior", 1, 1, 2, cathedral);
+    CharacterFactory::CreateEnemy("Skeleton", 1, 1, 1, armory);
+    CharacterFactory::CreateEnemy("Undead Warrior", 1, 1, 2, armory);
     
     armory.AddConnection(cathedral);
     armory.AddConnection(kitchen);
@@ -40,71 +82,171 @@ int main()
     
     cells.AddConnection(kitchen);
     
-    Door entranceDoor = entrance;
-    Door cathedralDoor = cathedral;
-    Door armoryDoor = armory;
-    Door kitchenDoor = kitchen;
-    Door cellsDoor = cells;
+    Door entranceDoor = Door(entrance, diablo);
+    Door cathedralDoor = Door(cathedral, diablo);
+    cathedralDoor.SetLocked(true, 3, 4);
+    
+    Door armoryDoor = Door(armory, diablo);
+    Door kitchenDoor = Door(kitchen, diablo);
+    Door cellsDoor = Door(cells, diablo);
     
     std::vector<Room> rooms = {entrance, cathedral, armory, kitchen, cells};
     std::vector<Door> doors = {entranceDoor, cathedralDoor, armoryDoor, kitchenDoor, cellsDoor};
-    
-    Room currentRoom = entrance;
-    
+
+    int currentRoomId = 0;
+    int previousRoomId = 0;
+
     Player player = CharacterFactory::CreatePlayer(5, 4, 6);
     diablo.player = player;
     
-    
-    Pause();
-    
-    Door currentDoor = doors[currentRoom.GetId()];
-    currentDoor.OpenDoor(diablo);
+    doors[currentRoomId].OpenDoor(diablo);
     
     bool shouldRun = true;
     int input;
     
     while (shouldRun)
     {
-        if (currentRoom.IsRoomCleared())
+        if (rooms[currentRoomId].IsRoomCleared())
         {
-            ForceInput(input, 1, currentRoom.GetConnectionsCount());
-            int finalInput = input - 1;
-            
-            currentRoom = rooms[currentRoom.GetConnection(finalInput).GetId()];
-            currentDoor = doors[currentRoom.GetId()];
-            currentDoor.OpenDoor(diablo);
+            if (!doors[currentRoomId].IsLocked())
+            {
+                int connectionsCount = rooms[currentRoomId].GetConnectionsCount();
+                int statsOption = connectionsCount + 1;
+                
+                ForceInput(input, diablo, 1, statsOption);
+
+                if (input == statsOption)
+                {
+                    ClearScreen();
+                    ShowStats(diablo);
+                    Pause();
+                    doors[currentRoomId].OpenDoor(diablo);
+                }
+                else
+                {
+                    int finalInput = input - 1;
+                    int nextRoomId = rooms[currentRoomId].GetConnection(finalInput).GetId();
+                    previousRoomId = currentRoomId;
+                    currentRoomId = nextRoomId;
+                    doors[currentRoomId].OpenDoor(diablo);
+                }
+            }
+            else
+            {
+                constexpr int MAX_OPTIONS = 4;
+                ForceInput(input, diablo, 1, MAX_OPTIONS);
+
+                switch (input)
+                {
+                case 1:
+                    if (diablo.player.GetStrength() >= doors[currentRoomId].GetRequiredStrength())
+                    {
+                        doors[currentRoomId].SetLocked(false);
+                        doors[currentRoomId].OpenDoor(diablo);
+                    }
+                    else
+                    {
+                        ClearScreen();
+                        std::cout << "You tried to brute-force the door, however, you failed!\n";
+                        Pause();
+                        currentRoomId = previousRoomId;
+                        doors[currentRoomId].OpenDoor(diablo);
+                    }
+                    break;
+                case 2:
+                    if (diablo.player.GetAgility() >= doors[currentRoomId].GetRequiredAgility())
+                    {
+                        doors[currentRoomId].SetLocked(false);
+                        doors[currentRoomId].OpenDoor(diablo);
+                    }
+                    else
+                    {
+                        ClearScreen();
+                        std::cout << "You accidentally broke the lockpick!\n";
+                        Pause();
+                        currentRoomId = previousRoomId;
+                        doors[currentRoomId].OpenDoor(diablo);
+                    }
+                    break;
+                case 3:
+                    currentRoomId = previousRoomId;
+                    doors[currentRoomId].OpenDoor(diablo);
+                    break;
+                case 4:
+                    ClearScreen();
+                    ShowStats(diablo);
+                    Pause();
+                    doors[currentRoomId].OpenDoor(diablo);
+                    break;
+                }
+            }
         }
-        
-        // I need to make the code look cleaner later!
         else
         {
-            do
+            int enemyCount = rooms[currentRoomId].GetEnemyCount();
+            int statsOption = enemyCount + 1;
+            
+            ForceInput(input, diablo, 1, statsOption);
+
+            if (input == statsOption)
             {
-                // This code doesn't really work properly. I will need to work on it!
-                int enemyCount = currentRoom.GetEnemyCount();
-            
-                ForceInput(input, 1, enemyCount);
+                ClearScreen();
+                ShowStats(diablo);
+                Pause();
+                rooms[currentRoomId].EnterCombat(diablo);
+            }
+            else
+            {
                 int finalInput = input - 1;
-            
-                Enemy chosenEnemy = currentRoom.GetEnemy(finalInput);
-                BattleController::Battle(diablo.player, chosenEnemy);
                 
-                if (!chosenEnemy.IsAlive()) 
+                BattleController::BattleTurn(diablo, rooms[currentRoomId], finalInput);
+                doors[currentRoomId].SetRoom(rooms[currentRoomId]);
+                
+                if (!diablo.player.IsAlive())
                 {
-                    currentRoom.RemoveEnemy(finalInput);
-                }
-            
-                for (int i = 0; i < enemyCount; i++)
-                {
-                    Enemy enemy = currentRoom.GetEnemy(i);
-                    if (enemy.IsAlive()) diablo.player.TakeDamage(CalculateDamageTaken(player.GetCharacter(), enemy.GetCharacter()));
+                    std::cout << "You died!\n";
+                    Pause();
+                    shouldRun = false;
+                    break;
                 }
                 
-                currentRoom.EnterCombat(diablo);
-            } while (!currentRoom.IsRoomCleared());
+                if (!rooms[currentRoomId].IsRoomCleared())
+                {
+                    rooms[currentRoomId].EnterCombat(diablo);
+                }
+                else
+                {
+                    doors[currentRoomId].OpenDoor(diablo);
+                }
+            }
+        }
+    }
+}
+
+int main()
+{
+    Diablo diablo = {};
+    bool running = true;
+    
+    while (running)
+    {
+        ShowMainMenu();
+        int menuChoice;
+        ForceInput(menuChoice, diablo, 1, 3);
+        
+        switch (menuChoice)
+        {
+        case 1:
+            PlayGame(diablo);
+            break;
+        case 2:
+            ShowCheatsMenu(diablo);
+            break;
+        case 3:
+            running = false;
+            break;
         }
     }
     
-    system("pause");
     return 0;
 }

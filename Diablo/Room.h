@@ -13,12 +13,18 @@ class Room
     int myId = -1;
     
     std::vector<Enemy> myEnemies = {};
+    Diablo myDiablo = {};
     
 public:
     // For logging!
     bool debug = false;
     
-    Room(const char* aRoomName);
+    Diablo GetGame() const
+    {
+        return myDiablo;
+    }
+    
+    Room(const char* aRoomName, const Diablo& aDiablo);
     void AddConnection(const Room& aRoom);
     void EnterCombat(const Diablo& aDiablo);
     
@@ -73,7 +79,10 @@ public:
     
     void RemoveEnemy(int aIndex)
     {
-        // Implement this.
+        if (aIndex >= 0 && aIndex < static_cast<int>(myEnemies.size()))
+        {
+            myEnemies.erase(myEnemies.begin() + aIndex);
+        }
     }
     
     bool IsRoomCleared() const
@@ -84,6 +93,36 @@ public:
     Enemy GetEnemy(int aIndex) const
     {
         return myEnemies.at(aIndex);
+    }
+    
+    Enemy& GetEnemyRef(int aIndex)
+    {
+        return myEnemies.at(aIndex);
+    }
+
+    const std::vector<Enemy>& GetEnemies() const
+    {
+        return myEnemies;
+    }
+
+    std::vector<Enemy>& GetEnemies()
+    {
+        return myEnemies;
+    }
+
+    void RemoveDeadEnemies()
+    {
+        for (auto it = myEnemies.begin(); it != myEnemies.end();)
+        {
+            if (!it->IsAlive())
+            {
+                it = myEnemies.erase(it);
+            }
+            else
+            {
+                ++it;
+            }
+        }
     }
     
     int GetEnemyCount() const { return static_cast<int>(myEnemies.size()); }

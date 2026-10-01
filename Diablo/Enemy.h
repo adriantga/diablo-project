@@ -14,7 +14,10 @@ public:
     bool IsAlive() const { return myCharacter.IsAlive(); }
     int GetHealth() const { return myCharacter.GetHealth(); }
     int GetMaxHealth() const { return myCharacter.GetMaxHealth(); }
-
+    int GetStrength() const { return myCharacter.strength; }
+    int GetAgility() const { return myCharacter.agility; }
+    int GetVitality() const { return myCharacter.vitality; }
+    
     void TakeDamage(int aDamage)
     {
         if (!myCharacter.IsAlive()) return;
@@ -25,6 +28,7 @@ public:
     {
         myCharacter.ResetHealth();
     }
+    
     
     void AddStrength()
     {
@@ -55,9 +59,4 @@ public:
     {
         myCharacter.agility = aAgility;
     }
-};
-
-struct Diablo
-{
-    Player player;
 };

@@ -9,6 +9,12 @@ public:
     int GetCarryCapacity() const { return myCharacter.strength + myCharacter.agility / 3; }
     bool IsAlive() const { return myCharacter.IsAlive(); }
     int GetHealth() const { return myCharacter.GetHealth(); }
+    int GetMaxHealth() const { return myCharacter.GetMaxHealth(); }
+    int GetStrength() const { return myCharacter.strength; }
+    int GetAgility() const { return myCharacter.agility; }
+    int GetVitality() const { return myCharacter.vitality; }
+    int GetAttackValue() const { return myCharacter.GetAttackValue(); }
+    int GetDefense() const { return myCharacter.GetDefense(); }
     
     void TakeDamage(int aDamage)
     {
@@ -50,4 +56,10 @@ public:
     {
         myCharacter.agility = aAgility;
     }
+};
+
+struct Diablo
+{
+    Player player;
+    Cheats cheats;
 };

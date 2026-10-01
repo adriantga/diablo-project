@@ -2,9 +2,12 @@
 
 #include <iostream>
 
-Room::Room(const char* aRoomName)
+#include "Utilities.h"
+
+Room::Room(const char* aRoomName, const Diablo& aDiablo)
 {
     myName = aRoomName;
+    myDiablo = aDiablo;
 }
 
 void Room::AddConnection(const Room& aRoom)
@@ -18,13 +21,16 @@ void Room::AddConnection(const Room& aRoom)
 
 void Room::EnterCombat(const Diablo& aDiablo)
 {
-    std::cout << "Health -> " << aDiablo.player.GetHealth() << '\n';
+    ClearScreen();
+    std::cout << "------------------------------------ " << GetName() << " ------------------------------------" << '\n';
+    std::cout << "Health -> " << aDiablo.player.GetHealth() << " / " << aDiablo.player.GetMaxHealth() << '\n';
     
     for (int i = 0; i < GetEnemyCount(); i++)
     {
         int enemyIndex = i + 1;
-        Enemy enemy = myEnemies[i];
+        const Enemy& enemy = myEnemies[i];
         
-        std::cout << "[" << enemyIndex << "] Attack " << enemy.GetName() << "(" << enemy.GetHealth() << "/" << enemy.GetMaxHealth() << ")" << '\n';
+        std::cout << "[" << enemyIndex << "] Attack " << enemy.GetName() << " (" << enemy.GetHealth() << " / " << enemy.GetMaxHealth() << ")" << '\n';
     }
+    std::cout << "[" << GetEnemyCount() + 1 << "] View stats" << '\n';
 }

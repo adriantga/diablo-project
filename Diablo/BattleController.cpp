@@ -5,34 +5,147 @@
 #include "Utilities.h"
 
 
-void BattleController::Battle(Player& aPlayer, Enemy& aEnemy)
+void BattleController::Battle(Diablo& aDiablo, Enemy& aEnemy)
 {
-    std::cout << "Player Health: " << aPlayer.GetCharacter().health << '\n';
-    std::cout << "Enemy Health: " << aEnemy.GetCharacter().health << '\n';
-    
-    DisplayHealth(aPlayer, aEnemy);
+    ClearScreen();
+    std::cout << "\n================= BATTLE STARTED =================" << '\n';
+    std::cout << "Fighting " << aEnemy.GetName() << "!" << '\n';
 
-    while (aPlayer.IsAlive() && aEnemy.IsAlive())
+    while (aDiablo.player.IsAlive() && aEnemy.IsAlive())
     {
-        Character playerCharacter = aPlayer.GetCharacter();
+        Character playerCharacter = aDiablo.player.GetCharacter();
         Character enemyCharacter = aEnemy.GetCharacter();
      
         Pause();
         
-        if (aPlayer.IsAlive()) aEnemy.TakeDamage(CalculateDamageTaken(enemyCharacter, playerCharacter));
-        if (aEnemy.IsAlive()) aPlayer.TakeDamage(CalculateDamageTaken(playerCharacter, enemyCharacter));
+        if (aDiablo.player.IsAlive())
+        {
+            int playerDamage = CalculateDamageTaken(enemyCharacter, playerCharacter);
+            if (aDiablo.cheats.isOneHit)
+            {
+                playerDamage = aEnemy.GetHealth();
+                std::cout << "[MAGIC TRICK] Instant kill activated!" << '\n';
+            }
+            aEnemy.TakeDamage(playerDamage);
+            std::cout << "Player dealt " << playerDamage << " damage to " << aEnemy.GetName() << "!" << '\n';
+        }
+
+        if (aEnemy.IsAlive())
+        {
+            int enemyDamage = CalculateDamageTaken(playerCharacter, enemyCharacter);
+            if (aDiablo.cheats.isImmortal)
+            {
+                enemyDamage = 0;
+                std::cout << "[SKILL ISSUE] Player is immortal and took no damage!" << '\n';
+            }
+            else
+            {
+                aDiablo.player.TakeDamage(enemyDamage);
+            }
+            std::cout << aEnemy.GetName() << " dealt " << enemyDamage << " damage to Player!" << '\n';
+        }
         
-        DisplayHealth(aPlayer, aEnemy);
+        DisplayHealth(aDiablo.player, aEnemy);
     }
     
-    if (aPlayer.IsAlive())
+    if (aDiablo.player.IsAlive())
     {
-        std::cout << "Player won!\n"; 
+        std::cout << "Player won the battle against " << aEnemy.GetName() << "!\n"; 
     }
+    std::cout << "==================================================" << '\n';
+}
+
+void BattleController::Battle(Player& aPlayer, Enemy& aEnemy)
+{
+    Diablo diablo = { aPlayer, {} };
+    Battle(diablo, aEnemy);
+    aPlayer = diablo.player;
+}
+
+void BattleController::BattleTurn(Diablo& aDiablo, Room& aRoom, int aTargetIndex)
+{
+    if (aTargetIndex < 0 || aTargetIndex >= aRoom.GetEnemyCount())
+    {
+        return;
+    }
+
+    ClearScreen();
+    std::cout << "\n================= BATTLE TURN =================" << '\n';
+
+    Enemy& targetEnemy = aRoom.GetEnemyRef(aTargetIndex);
+    Character playerCharacter = aDiablo.player.GetCharacter();
+    Character targetCharacter = targetEnemy.GetCharacter();
+
+    int playerDamage = CalculateDamageTaken(targetCharacter, playerCharacter);
+    if (aDiablo.cheats.isOneHit)
+    {
+        playerDamage = targetEnemy.GetHealth();
+        std::cout << "[MAGIC TRICK] Instant kill activated!" << '\n';
+    }
+    targetEnemy.TakeDamage(playerDamage);
+    std::cout << "Player dealt " << playerDamage << " damage to " << targetEnemy.GetName() << "!" << '\n';
+
+    if (!targetEnemy.IsAlive())
+    {
+        std::cout << targetEnemy.GetName() << " was defeated!" << '\n';
+    }
+
+    // Natural attack phase: all surviving enemies in the room counterattack the player
+    for (int i = 0; i < aRoom.GetEnemyCount(); i++)
+    {
+        Enemy& enemy = aRoom.GetEnemyRef(i);
+        if (enemy.IsAlive())
+        {
+            Character enemyCharacter = enemy.GetCharacter();
+            int enemyDamage = CalculateDamageTaken(aDiablo.player.GetCharacter(), enemyCharacter);
+            if (aDiablo.cheats.isImmortal)
+            {
+                enemyDamage = 0;
+                std::cout << "[SKILL ISSUE] Player is immortal and took no damage from " << enemy.GetName() << "!" << '\n';
+            }
+            else
+            {
+                aDiablo.player.TakeDamage(enemyDamage);
+            }
+            std::cout << enemy.GetName() << " dealt " << enemyDamage << " damage to Player!" << '\n';
+        }
+    }
+
+    aRoom.RemoveDeadEnemies();
+
+    std::cout << "--------------------------------------------------" << '\n';
+    DisplayHealth(aDiablo.player, aRoom.GetEnemies());
+    std::cout << "==================================================" << '\n';
+
+    if (!aDiablo.player.IsAlive())
+    {
+        std::cout << "Player was defeated in battle!\n";
+    }
+    else if (aRoom.IsRoomCleared())
+    {
+        std::cout << "Player defeated all enemies in " << aRoom.GetName() << "!\n";
+    }
+
+    Pause();
 }
 
 void BattleController::DisplayHealth(const Player& aPlayer, const Enemy& aEnemy)
 {
-    if (aPlayer.IsAlive()) std::cout << "Player Health: " << aPlayer.GetHealth() << '\n';
-    if (aEnemy.IsAlive()) std::cout << "Enemy Health: " << aEnemy.GetHealth() << '\n';
+    if (aPlayer.IsAlive()) std::cout << "Player Health: " << aPlayer.GetHealth() << " / " << aPlayer.GetMaxHealth() << '\n';
+    if (aEnemy.IsAlive()) std::cout << "Enemy Health: " << aEnemy.GetHealth() << " / " << aEnemy.GetMaxHealth() << '\n';
+}
+
+void BattleController::DisplayHealth(const Player& aPlayer, const std::vector<Enemy>& aEnemies)
+{
+    if (aPlayer.IsAlive())
+    {
+        std::cout << "Player Health: " << aPlayer.GetHealth() << " / " << aPlayer.GetMaxHealth() << '\n';
+    }
+    for (const auto& enemy : aEnemies)
+    {
+        if (enemy.IsAlive())
+        {
+            std::cout << enemy.GetName() << " Health: " << enemy.GetHealth() << " / " << enemy.GetMaxHealth() << '\n';
+        }
+    }
 }
