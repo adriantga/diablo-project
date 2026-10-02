@@ -28,6 +28,7 @@ void Door::OpenDoor(Diablo& aDiablo)
         std::cout << "[2] Try to pick the lock" << '\n';
         std::cout << "[3] Go back" << '\n';
         std::cout << "[4] View stats" << '\n';
+        std::cout << "[5] View inventory" << '\n';
         return;
     }
     
@@ -37,11 +38,11 @@ void Door::OpenDoor(Diablo& aDiablo)
         return;
     }
     
-    std::cout << "------------------------------------ " << myRoom.GetName() << " ------------------------------------" << '\n';
-    
-    for (int connection = 0; connection < myRoom.GetConnectionsCount(); connection++)
-    {
-        std::cout << "[" << connection + 1 << "] Enter " << myRoom.GetConnection(connection).GetName() << '\n';
-    }
-    std::cout << "[" << myRoom.GetConnectionsCount() + 1 << "] View stats" << '\n';
+    myRoom.DisplayRoom(aDiablo);
+}
+
+void Door::OpenDoor(Diablo& aDiablo, Room& aRoom)
+{
+    SetRoom(aRoom);
+    OpenDoor(aDiablo);
 }

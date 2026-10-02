@@ -73,10 +73,9 @@ void BattleController::BattleTurn(Diablo& aDiablo, Room& aRoom, int aTargetIndex
     std::cout << "\n================= BATTLE TURN =================" << '\n';
 
     Enemy& targetEnemy = aRoom.GetEnemyRef(aTargetIndex);
-    Character playerCharacter = aDiablo.player.GetCharacter();
-    Character targetCharacter = targetEnemy.GetCharacter();
 
-    int playerDamage = CalculateDamageTaken(targetCharacter, playerCharacter);
+    int playerDamage = aDiablo.player.GetAttackValue() - targetEnemy.GetDefense();
+    playerDamage = Min(playerDamage, 1);
     if (aDiablo.cheats.isOneHit)
     {
         playerDamage = targetEnemy.GetHealth();
@@ -88,6 +87,16 @@ void BattleController::BattleTurn(Diablo& aDiablo, Room& aRoom, int aTargetIndex
     if (!targetEnemy.IsAlive())
     {
         std::cout << targetEnemy.GetName() << " was defeated!" << '\n';
+        if (targetEnemy.HasLoot())
+        {
+            int roll = rand() % 100;
+            if (roll < targetEnemy.GetDropChance())
+            {
+                Item loot = targetEnemy.GetLoot();
+                aRoom.AddItem(loot);
+                std::cout << targetEnemy.GetName() << " dropped [" << loot.GetName() << "] on the floor!" << '\n';
+            }
+        }
     }
 
     // Natural attack phase: all surviving enemies in the room counterattack the player
@@ -96,8 +105,8 @@ void BattleController::BattleTurn(Diablo& aDiablo, Room& aRoom, int aTargetIndex
         Enemy& enemy = aRoom.GetEnemyRef(i);
         if (enemy.IsAlive())
         {
-            Character enemyCharacter = enemy.GetCharacter();
-            int enemyDamage = CalculateDamageTaken(aDiablo.player.GetCharacter(), enemyCharacter);
+            int enemyDamage = enemy.GetAttackValue() - aDiablo.player.GetDefense();
+            enemyDamage = Min(enemyDamage, 1);
             if (aDiablo.cheats.isImmortal)
             {
                 enemyDamage = 0;
@@ -111,6 +120,7 @@ void BattleController::BattleTurn(Diablo& aDiablo, Room& aRoom, int aTargetIndex
         }
     }
 
+    aDiablo.player.TickSpells();
     aRoom.RemoveDeadEnemies();
 
     std::cout << "--------------------------------------------------" << '\n';

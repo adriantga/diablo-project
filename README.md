@@ -6,9 +6,9 @@ On a positive note, the implementation is less limited than [Casino Project](htt
 
 ## Current Progress(Components)
 Check out ``Project Base.txt`` to see the full list of **required** components
-- [x] Doors
-- [x] Rooms
-- [x] Enemies
-- [x] Battles
+- [ ] Doors
+- [ ] Rooms
+- [ ] Enemies
+- [ ] Battles
 - [ ] Chests
 - [ ] Inventory

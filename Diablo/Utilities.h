@@ -12,6 +12,8 @@ void ClearInput();
 void ShowStats(const Character& character, const Player& player);
 void ShowStats(const Character& character);
 void ShowStats(const Diablo& diablo);
+void ShowInventory(const Diablo& diablo);
+std::string FormatModifiers(const StatModifier& aMod);
 void ForceInput(int& aInput, int aMin = -1, int aMax = -1);
 void ForceInput(int& aInput, Diablo& aDiablo, int aMin, int aMax);
 bool HandleCheatCode(const std::string& aInput, Diablo& aDiablo);
@@ -19,6 +21,6 @@ int CalculateDamageTaken(Character aSelf, Character aOpponent);
 
 namespace CharacterFactory
 {
-    Enemy CreateEnemy(const char* aEnemyName, int aStrength, int aAgility, int aVitality, Room& room);
+    Enemy CreateEnemy(const char* aEnemyName, int aStrength, int aAgility, int aVitality, Room& room, const Item& aLoot = {}, int aDropChance = 0);
     Player CreatePlayer(int aStrength, int aAgility, int aVitality);
 }

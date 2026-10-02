@@ -1,11 +1,14 @@
 ﻿#pragma once
 #include "Helpers.h"
-#include "Player.h"
+#include "Item.h"
 
 class Enemy
 {
     Character myCharacter;
     const char* myName;
+    bool myHasLoot = false;
+    Item myLoot;
+    int myDropChance = 100;
     
 public:
     Enemy(const char* aEnemyName);
@@ -17,6 +20,19 @@ public:
     int GetStrength() const { return myCharacter.strength; }
     int GetAgility() const { return myCharacter.agility; }
     int GetVitality() const { return myCharacter.vitality; }
+    int GetAttackValue() const { return myCharacter.GetAttackValue(); }
+    int GetDefense() const { return myCharacter.GetDefense(); }
+
+    void SetLoot(const Item& aLoot, int aDropChance = 100)
+    {
+        myLoot = aLoot;
+        myHasLoot = true;
+        myDropChance = aDropChance;
+    }
+
+    bool HasLoot() const { return myHasLoot; }
+    const Item& GetLoot() const { return myLoot; }
+    int GetDropChance() const { return myDropChance; }
     
     void TakeDamage(int aDamage)
     {

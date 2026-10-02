@@ -2,7 +2,11 @@
 #include <iostream>
 #include <vector>
 
+#include "Chest.h"
 #include "Enemy.h"
+#include "Item.h"
+#include "Player.h"
+#include "Spell.h"
 
 class Room
 {
@@ -13,6 +17,9 @@ class Room
     int myId = -1;
     
     std::vector<Enemy> myEnemies = {};
+    std::vector<Item> myItems = {};
+    std::vector<Spell> mySpells = {};
+    std::vector<Chest> myChests = {};
     Diablo myDiablo = {};
     
 public:
@@ -25,8 +32,10 @@ public:
     }
     
     Room(const char* aRoomName, const Diablo& aDiablo);
+    Room(const char* aRoomName = "Room");
     void AddConnection(const Room& aRoom);
     void EnterCombat(const Diablo& aDiablo);
+    void DisplayRoom(const Diablo& aDiablo) const;
     
     void SetId(const int aId)
     {
@@ -126,4 +135,82 @@ public:
     }
     
     int GetEnemyCount() const { return static_cast<int>(myEnemies.size()); }
+
+    void AddItem(const Item& aItem)
+    {
+        myItems.push_back(aItem);
+    }
+
+    void RemoveItem(int aIndex)
+    {
+        if (aIndex >= 0 && aIndex < static_cast<int>(myItems.size()))
+        {
+            myItems.erase(myItems.begin() + aIndex);
+        }
+    }
+
+    const std::vector<Item>& GetItems() const { return myItems; }
+    std::vector<Item>& GetItems() { return myItems; }
+    int GetItemCount() const { return static_cast<int>(myItems.size()); }
+
+    void AddSpell(const Spell& aSpell)
+    {
+        mySpells.push_back(aSpell);
+    }
+
+    void RemoveSpell(int aIndex)
+    {
+        if (aIndex >= 0 && aIndex < static_cast<int>(mySpells.size()))
+        {
+            mySpells.erase(mySpells.begin() + aIndex);
+        }
+    }
+
+    const std::vector<Spell>& GetSpells() const { return mySpells; }
+    std::vector<Spell>& GetSpells() { return mySpells; }
+    int GetSpellCount() const { return static_cast<int>(mySpells.size()); }
+
+    void AddChest(const Chest& aChest)
+    {
+        myChests.push_back(aChest);
+    }
+
+    void RemoveChest(int aIndex)
+    {
+        if (aIndex >= 0 && aIndex < static_cast<int>(myChests.size()))
+        {
+            myChests.erase(myChests.begin() + aIndex);
+        }
+    }
+
+    const std::vector<Chest>& GetChests() const { return myChests; }
+    std::vector<Chest>& GetChests() { return myChests; }
+    int GetChestCount() const { return static_cast<int>(myChests.size()); }
+
+    int GetUnopenedChestCount() const
+    {
+        int count = 0;
+        for (const auto& chest : myChests)
+        {
+            if (!chest.IsOpen()) count++;
+        }
+        return count;
+    }
+
+    int GetUnopenedChestIndex(int aUnopenedOrdinal) const
+    {
+        int count = 0;
+        for (size_t i = 0; i < myChests.size(); ++i)
+        {
+            if (!myChests[i].IsOpen())
+            {
+                if (count == aUnopenedOrdinal)
+                {
+                    return static_cast<int>(i);
+                }
+                count++;
+            }
+        }
+        return -1;
+    }
 };

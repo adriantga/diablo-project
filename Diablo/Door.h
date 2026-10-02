@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Player.h"
 #include "Room.h"
 
 class Door
@@ -20,6 +21,7 @@ public:
     Diablo GetGame() const { return myDiablo; }
     
     void OpenDoor(Diablo& aDiablo);
+    void OpenDoor(Diablo& aDiablo, Room& aRoom);
     
     bool IsLocked() const
     {

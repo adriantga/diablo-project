@@ -1,6 +1,17 @@
 ﻿#pragma once
 int Min(int aValue, int aMin);
 
+struct StatModifier
+{
+    int strength = 0;
+    int agility = 0;
+    int vitality = 0;
+    int attack = 0;
+    int defense = 0;
+    int maxHealth = 0;
+    int carryCapacity = 0;
+};
+
 struct Character
 {
     int health = 1;

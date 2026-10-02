@@ -12,15 +12,6 @@ Diablo – Baseline:
  - Carry Capacity = Strength + Agility / 3
  - Defense = Vitality + Agility
 
-Diablo – Structure:
- - Write Code Structure!
-
 Diablo – Cheat Codes:
  - "skill issue" = immortality
  - "magic trick" = kill enemy instantly
-
-Diablo – Details:
- - "->" to indicate currently selected index
- - "[←/→]" to cycle horizontally
- - "[↓/↑]" to cycle vertically
- - "[ENTER]" to select option
